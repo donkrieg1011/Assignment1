@@ -16,7 +16,7 @@ public class CriminalConnection {
 		String dbName = "ass1";
 		String dburl = "jdbc:mysql://" + hostName + ":3306/" + dbName + "?autoReconnect=true&useSSL=false";;
 		DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-		myConn = DriverManager.getConnection(dburl, user, password);
+		myConn = DriverManager.getCovnnection(dburl, user, password);
 		System.out.println("Successful connection to: " + dburl);
 	}
 	
@@ -46,8 +46,38 @@ public class CriminalConnection {
 	}
 	
 	public StringBuilder searchCriminals(String lastName) throws Exception {
-		return list;
-		
+		list = new StringBuilder();
+		 
+		PreparedStatement myStmt = null;
+		ResultSet myRs = null;
+
+		try {
+			myStmt = myConn.prepareStatement("select * from criminal_info where last_name like ?  order by last_name");
+			
+			myStmt.setString(1, lastName);
+			
+			myRs = myStmt.executeQuery();
+			if(!myRs.next()){
+				list.append("NONE");
+			}
+			myRs.beforeFirst();
+			while (myRs.next()) {
+				String myFirstName = myRs.getString("first_name");
+	            String myLastName = myRs.getString("last_name");
+	            String myNationality = myRs.getString("nationality");
+	            String myCrime = myRs.getString("crime");
+	            Date myDOB = myRs.getDate("date_of_birth");
+	            
+	            CriminalInfo tempCriminal = new CriminalInfo(myLastName, myFirstName, myNationality, myCrime, myDOB);
+	    		
+	    		list.append(tempCriminal.toString());
+	    		
+			}
+			return list;
+		}
+		finally {
+			myConn.close();
+		}
 	}
 	
 }
