@@ -1,7 +1,7 @@
 package criminalProfile;
 
-import java.sql.Date;
 import java.sql.Time;
+import java.util.Date;
 
 public class CriminalInfo {
 	private static String lastName;
@@ -52,8 +52,16 @@ public class CriminalInfo {
 		this.dateOfBirth = newDOB;
 	}
 	
+	public static String getCrime() {
+		return crime;
+	}
+
+	public void setCrime(String newCrime) {
+		this.crime = newCrime;
+	}
+	
 	public String toString() {
-		return String.format("Criminal Information: \nLast Name: %s \nFirst Name: %s \nNationality: %s \nDate of Birth: %s \nCrime: %s\n] ",
+		return String.format("Criminal Information: \nLast Name: %s \nFirst Name: %s \nNationality: %s \nDate of Birth: %s \nCrime: %s\n\n",
 						      lastName, firstName, nationality, dateOfBirth, crime);
 	}
 }

@@ -17,10 +17,8 @@ public class LoginScreen extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUsername;
 	private JTextField txtPassword;
+	private LoginConnection newConnection;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		try {
 			LoginScreen dialog = new LoginScreen();
@@ -30,10 +28,7 @@ public class LoginScreen extends JDialog {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Create the dialog.
-	 */
+	
 	public LoginScreen() {
 		setTitle("Criminal Profile System");
 		setBounds(100, 100, 450, 300);
@@ -59,6 +54,10 @@ public class LoginScreen extends JDialog {
 		txtPassword.setBounds(105, 86, 148, 20);
 		contentPanel.add(txtPassword);
 		txtPassword.setColumns(10);
+		
+		JLabel lblMessage = new JLabel("");
+		lblMessage.setBounds(23, 137, 311, 28);
+		contentPanel.add(lblMessage);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -67,17 +66,45 @@ public class LoginScreen extends JDialog {
 				JButton loginButton = new JButton("Log in");
 				loginButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						UserInterface userInterface = new UserInterface();
-						userInterface.setVisible(true);
-						dispose();
-					}
-				});
+						try {
+							newConnection = new LoginConnection();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						if (txtUsername.getText().isEmpty() || txtPassword.getText().isEmpty()) {
+							lblMessage.setText("One of the fields is empty. Please try again");
+						}
+						else {
+							try {
+								boolean result = newConnection.searchUsers(txtUsername.getText(), txtPassword.getText());
+							
+								if (result == true) {
+									UserInterface userInterface = new UserInterface();
+									userInterface.setVisible(true);
+									dispose();
+								}
+								else {
+									lblMessage.setText("Invalid login details. Please try again.");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+						
+						}
+				}});
 				loginButton.setActionCommand("OK");
 				buttonPane.add(loginButton);
 				getRootPane().setDefaultButton(loginButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.exit(0);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
