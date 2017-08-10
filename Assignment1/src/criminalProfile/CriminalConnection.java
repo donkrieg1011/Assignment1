@@ -33,7 +33,7 @@ public class CriminalConnection {
 			Date dateOfBirth = Date.valueOf(sdf.format(CriminalInfo.getDOB()));
 			
 			myStmt.setString(1, CriminalInfo.getFirstName());
-			myStmt.setString(2, CriminalInfo.getLastName());
+			myStmt.setString(2, CriminaflInfo.getLastName());
 			myStmt.setString(3, CriminalInfo.getNationality());
 			myStmt.setString(4, CriminalInfo.getCrime());
 			myStmt.setDate(5, dateOfBirth);
